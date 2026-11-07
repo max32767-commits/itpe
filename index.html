@@ -1,0 +1,335 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#373282">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22ITPE%20%EB%B0%98%EB%B3%B5%EC%95%94%EA%B8%B0%22%2C%22short_name%22%3A%22ITPE%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23FFFFFF%22%2C%22theme_color%22%3A%22%23373282%22%7D">
+<title>ITPE 반복암기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap">
+<style>
+:root{
+  --bg:#FFFFFF; --surface:#F7F7F5; --surface2:#EFEFEC; --fg:#15171C; --muted:#6B7280;
+  --line:#E4E4E8; --accent:#373282; --accent-fg:#FFFFFF; --point:#ED911A;
+  --ok:#1F9D55; --ok-bg:#E8F6EE; --bad:#D6453D; --bad-bg:#FBEAE9; --warn:#B45309; --warn-bg:#FEF3C7;
+  --font:"Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#15171C; --surface:#1F2128; --surface2:#2A2D36; --fg:#F2F2F0; --muted:#9AA0AA;
+  --line:#33363F; --accent:#8C86E0; --accent-fg:#15171C; --point:#F2A94A;
+  --ok:#4CC27A; --ok-bg:#1C3328; --bad:#F0706A; --bad-bg:#3A2322; --warn:#F2C14E; --warn-bg:#3A3220; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#15171C; --surface:#1F2128; --surface2:#2A2D36; --fg:#F2F2F0; --muted:#9AA0AA;
+  --line:#33363F; --accent:#8C86E0; --accent-fg:#15171C; --point:#F2A94A;
+  --ok:#4CC27A; --ok-bg:#1C3328; --bad:#F0706A; --bad-bg:#3A2322; --warn:#F2C14E; --warn-bg:#3A3220; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.6;margin:0}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 24px 72px}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 24px;border-bottom:1px solid var(--line)}
+.top-in{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;letter-spacing:-.01em;cursor:pointer}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block}
+.brand small{font-weight:400;color:var(--muted);font-size:13px;margin-left:4px}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+.pill{border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:6px 14px;height:36px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:14px}
+.pill[aria-current="page"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn{border-radius:999px;border:0;background:var(--accent);color:var(--accent-fg);font-weight:700;height:48px;padding:0 26px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.ghost{background:var(--bg);color:var(--fg);border:1px solid var(--line)}
+.btn.ok{background:var(--ok);color:#fff}.btn.bad{background:var(--bad);color:#fff}
+.btn.sm{height:38px;padding:0 18px;font-size:14px}
+h1{font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.15;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h2{font-size:22px;font-weight:800;margin:0;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:700;margin:0}
+.label{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em}
+.muted{color:var(--muted)}.small{font-size:14px}
+.card{background:var(--surface);border-radius:20px;padding:22px}
+.grid{display:grid;gap:18px}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:720px){.g3,.g2{grid-template-columns:1fr}.wrap{padding:16px 16px 64px}header.top{padding:10px 16px}}
+.stat .num{font-size:40px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stat .num b{color:var(--accent)}.stat .cap{font-size:14px;color:var(--muted);margin-top:4px}
+.sec{display:flex;flex-direction:column;gap:18px;margin-top:36px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.subj{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:12px 0;cursor:pointer}
+.subj+.subj{border-top:1px solid var(--line)}
+.bar{grid-column:1/-1;height:8px;border-radius:999px;background:var(--surface2);overflow:hidden;display:flex}
+.bar i{display:block;height:100%;background:var(--accent)}.bar i.w{background:var(--point)}
+.chip{font-size:12px;border-radius:999px;padding:2px 10px;background:var(--surface2);color:var(--muted);font-weight:700;display:inline-block}
+.chip.acc{background:var(--accent);color:var(--accent-fg)}.chip.ok{background:var(--ok-bg);color:var(--ok)}.chip.bad{background:var(--bad-bg);color:var(--bad)}.chip.pt{background:var(--warn-bg);color:var(--warn)}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.qtext{font-size:22px;font-weight:800;line-height:1.4;margin:12px 0 6px;text-wrap:pretty}
+.qdef{font-size:17px;line-height:1.6;margin:12px 0 20px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;text-align:left;width:100%;background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:12px 16px;color:var(--fg);line-height:1.5}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .n{width:26px;height:26px;border-radius:50%;background:var(--surface2);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}.opt.bad{border-color:var(--bad);background:var(--bad-bg)}.opt:disabled{cursor:default}
+.du{font-size:26px;font-weight:800;letter-spacing:.02em;color:var(--accent)}
+table.kv{width:100%;border-collapse:collapse;font-size:15px}
+table.kv td{padding:8px 6px;border-top:1px solid var(--line);vertical-align:top}
+table.kv td.k{width:110px;font-weight:700;color:var(--muted);white-space:nowrap}
+table.kv td.d{width:120px;font-weight:800;color:var(--accent);white-space:nowrap}
+@media (max-width:600px){table.kv td.k{width:80px}table.kv td.d{width:auto}table.kv{font-size:14px}}
+.ins{padding-left:18px;margin:8px 0 0}.ins li{margin:4px 0}
+.hidden{display:none}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+input[type=text],select,input[type=date],input[type=number]{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;height:44px}
+.chk{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;background:var(--bg)}
+.chk input{accent-color:var(--accent)}
+.chk.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.list{display:flex;flex-direction:column}
+.item{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.item .no{font-weight:800;color:var(--accent);font-size:14px}
+.box{display:inline-flex;gap:3px}.box i{width:8px;height:8px;border-radius:2px;background:var(--surface2);display:block}.box i.on{background:var(--ok)}
+.flip{min-height:200px;display:flex;flex-direction:column;justify-content:center;cursor:pointer}
+.kbd{font-size:12px;color:var(--muted)}
+.prog{height:6px;background:var(--surface2);border-radius:999px;overflow:hidden;margin:10px 0 0}.prog i{display:block;height:100%;background:var(--accent)}
+</style></head><body>
+<header class="top"><div class="top-in">
+  <div class="brand" data-view="home"><span class="dot"></span>ITPE 반복암기 <small>정보관리기술사</small></div>
+  <nav>
+    <button class="pill" data-view="home" aria-current="page">홈</button>
+    <button class="pill" data-view="setup">학습 시작</button>
+    <button class="pill" data-view="browse">토픽 목록</button>
+    <button class="pill" data-view="wrong">오답노트</button>
+    <button class="pill" data-view="history">기록</button>
+    <button class="pill" data-view="settings">설정</button>
+  </nav>
+</div></header>
+<main class="wrap" id="app"></main>
+<div class="toast" id="toast"></div>
+<script src="data.js"></script>
+<script>
+const T = window.ITPE_TOPICS, G = window.ITPE_GROUPS;
+const byId = new Map(T.map(t=>[t.id,t]));
+const KEY='itpe_v1';
+let S = load();
+function load(){ try{const r=localStorage.getItem(KEY); if(r) return JSON.parse(r);}catch(e){} return {stats:{},history:[],marks:[],exam:"",theme:""}; }
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+function st(id){ return S.stats[id] || (S.stats[id]={seen:0,ok:0,ng:0,box:0,streak:0,last:0,due:0}); }
+const DAYS=[0,1,3,7,14,30];
+function record(id, correct){
+  const s=st(id); s.seen++; s.last=Date.now();
+  if(correct){ s.ok++; s.streak++; s.box=Math.min(5,s.box+1); }
+  else { s.ng++; s.streak=0; s.box=0; }
+  s.due = Date.now() + DAYS[s.box]*86400000;
+  save();
+}
+const $=sel=>document.querySelector(sel);
+const app=$('#app');
+function h(str){ return String(str??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function pct(a,b){ return b? Math.round(a/b*100):0; }
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),1600); }
+function dday(){ if(!S.exam) return null; const d=Math.ceil((new Date(S.exam)-new Date().setHours(0,0,0,0))/86400000); return d; }
+function gno(t){ return t.id/1000|0; }
+function gname(n){ const t=T.find(x=>gno(x)===n); return t? t.g:''; }
+function boxes(s){ return '<span class="box">'+[1,2,3,4,5].map(i=>`<i class="${s.box>=i?'on':''}"></i>`).join('')+'</span>'; }
+function speak(txt){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(txt); u.lang='ko-KR'; u.rate=1.05; speechSynthesis.speak(u);}catch(e){ toast('이 브라우저는 음성을 지원하지 않아요'); } }
+function speakTopic(t){ speak(`${t.t}. ${t.def}. `+t.lines.map(l=>`${l.k}. ${l.v}. ${l.d? '두음 '+l.d.split('').join(' ')+'.':''}`).join(' ')); }
+
+// ---------- views ----------
+const views={home,setup,browse,wrong,history,settings,quiz,result,detail};
+let V='home', VARG=null;
+function go(v,arg){ if(V==='quiz' && v!=='quiz' && Q && !Q.done && !confirm('학습을 중단할까요? 지금까지 푼 문제만 기록돼요.')) return; V=v; VARG=arg; render(); window.scrollTo(0,0); }
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
+function render(){
+  document.querySelectorAll('nav .pill').forEach(b=>b.toggleAttribute('aria-current', b.dataset.view===V) );
+  document.querySelectorAll('nav .pill').forEach(b=>{ if(b.dataset.view===V) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
+  app.innerHTML=''; views[V](VARG);
+}
+app.addEventListener('click',e=>{
+  const el=e.target.closest('[data-go]'); if(el){ go(el.dataset.go, el.dataset.arg? JSON.parse(el.dataset.arg):null); return; }
+  const d=e.target.closest('[data-detail]'); if(d){ go('detail',{id:+d.dataset.detail, back:V, barg:VARG}); }
+});
+
+function home(){
+  const total=T.length, seen=T.filter(t=>S.stats[t.id]?.seen).length, mastered=T.filter(t=>(S.stats[t.id]?.box||0)>=4).length;
+  const now=Date.now(), due=T.filter(t=>S.stats[t.id]?.seen && (S.stats[t.id].due||0)<=now).length;
+  const weak=T.filter(t=>S.stats[t.id] && S.stats[t.id].ng>0 && S.stats[t.id].box<2).length;
+  const d=dday();
+  let html=`<div class="row" style="justify-content:space-between"><div><div class="label">정보관리기술사</div><h1>토픽 ${total}개,<br>두음으로 반복 암기</h1></div>
+    <div class="card" style="min-width:180px"><div class="label">D-day</div><div class="stat"><div class="num">${d===null?'<span class="muted" style="font-size:20px">미설정</span>':(d>0?'D-<b>'+d+'</b>':d===0?'<b>D-day</b>':'D+'+(-d))}</div><div class="cap">${S.exam? S.exam:'<button class="pill" data-go="settings">시험일 설정</button>'}</div></div></div></div>
+  <div class="grid g3" style="margin-top:28px">
+    <div class="card stat"><div class="num"><b>${seen}</b><span class="muted" style="font-size:20px">/${total}</span></div><div class="cap">한 번 이상 학습</div></div>
+    <div class="card stat"><div class="num"><b>${mastered}</b></div><div class="cap">암기 완료 (4단계 이상)</div></div>
+    <div class="card stat"><div class="num"><b>${due}</b></div><div class="cap">오늘 복습할 토픽</div></div>
+  </div>
+  <div class="row" style="margin-top:24px">
+    <button class="btn" data-go="setup">학습 시작</button>
+    ${due? `<button class="btn ghost" data-go="quiz" data-arg='${JSON.stringify({mode:"flash",pool:"due",n:20})}'>복습 ${Math.min(due,20)}개 바로 시작</button>`:''}
+    ${weak? `<button class="btn ghost" data-go="wrong">약한 토픽 ${weak}개</button>`:''}
+  </div>
+  <section class="sec"><h2>분류별 진도</h2><div class="card">`;
+  const nums=[...new Set(T.map(gno))];
+  for(const n of nums){
+    const ts=T.filter(t=>gno(t)===n); const s=ts.filter(t=>S.stats[t.id]?.seen).length, m=ts.filter(t=>(S.stats[t.id]?.box||0)>=4).length;
+    html+=`<div class="subj" data-go="setup" data-arg='${JSON.stringify({g:n})}'><div><b>${n}. ${h(gname(n))}</b> <span class="muted small">${ts.length}개</span></div><div class="small muted">학습 ${s} · 완료 ${m}</div><div class="bar"><i style="width:${pct(m,ts.length)}%"></i><i class="w" style="width:${pct(s-m,ts.length)}%"></i></div></div>`;
+  }
+  html+=`</div></section>`;
+  app.innerHTML=html;
+}
+
+const MODES={
+  flash:{name:'두음 플래시카드',desc:'토픽을 보고 정의·두음을 떠올린 뒤 뒤집어 확인. 스스로 채점.'},
+  dueum:{name:'두음 → 풀이 고르기',desc:'토픽과 두음을 보고 올바른 풀이(키워드)를 4지선다로 고르기.'},
+  def:{name:'정의 → 토픽 맞히기',desc:'정의를 읽고 어떤 토픽인지 4지선다로 고르기.'},
+  topic:{name:'토픽 → 정의 고르기',desc:'토픽명을 보고 올바른 정의를 4지선다로 고르기.'},
+  mix:{name:'혼합',desc:'위 세 가지 4지선다를 섞어서 출제.'},
+};
+let SETUP={g:[],mode:'flash',pool:'all',n:20,order:'weak'};
+function setup(arg){
+  if(arg&&arg.g!=null) SETUP.g=[arg.g];
+  const nums=[...new Set(T.map(gno))];
+  const sel=new Set(SETUP.g);
+  const poolCount=buildPool(SETUP).length;
+  app.innerHTML=`<div class="label">학습 시작</div><h1>무엇을 외울까요?</h1>
+  <section class="sec"><div class="card"><h3>분류 <span class="muted small">(선택 없음 = 전체)</span></h3><div class="row" style="margin-top:10px" id="gs">
+    ${nums.map(n=>`<label class="chk ${sel.has(n)?'on':''}"><input type="checkbox" value="${n}" ${sel.has(n)?'checked':''} hidden>${n}. ${h(gname(n))}</label>`).join('')}
+  </div><div class="row" style="margin-top:10px"><button class="pill" id="gall">전체 해제</button></div></div>
+  <div class="card"><h3>방식</h3><div class="grid g2" style="margin-top:10px" id="modes">
+    ${Object.entries(MODES).map(([k,m])=>`<label class="opt ${SETUP.mode===k?'ok':''}" style="cursor:pointer"><input type="radio" name="mode" value="${k}" ${SETUP.mode===k?'checked':''} hidden><span class="n">${SETUP.mode===k?'●':'○'}</span><span><b>${m.name}</b><br><span class="muted small">${m.desc}</span></span></label>`).join('')}
+  </div></div>
+  <div class="card"><h3>범위와 순서</h3><div class="row" style="margin-top:10px">
+    <select id="pool"><option value="all">전체 토픽</option><option value="due">복습 시기 도래</option><option value="new">아직 안 본 토픽</option><option value="weak">틀린 적 있는 토픽</option><option value="mark">★ 표시한 토픽</option></select>
+    <select id="order"><option value="weak">약한 것 우선</option><option value="random">랜덤</option><option value="seq">번호순</option></select>
+    <select id="n"><option>10</option><option>20</option><option>30</option><option>50</option><option value="0">전부</option></select>
+  </div><p class="muted small" style="margin:10px 0 0">조건에 맞는 토픽 <b id="pc">${poolCount}</b>개</p></div>
+  <div class="row"><button class="btn" id="start" ${poolCount?'':'disabled'}>시작</button></div></section>`;
+  $('#pool').value=SETUP.pool; $('#order').value=SETUP.order; $('#n').value=String(SETUP.n);
+  const upd=()=>{ SETUP.g=[...document.querySelectorAll('#gs input:checked')].map(i=>+i.value); SETUP.pool=$('#pool').value; SETUP.order=$('#order').value; SETUP.n=+$('#n').value; SETUP.mode=document.querySelector('#modes input:checked').value;
+    document.querySelectorAll('#gs .chk').forEach(l=>l.classList.toggle('on',l.querySelector('input').checked));
+    document.querySelectorAll('#modes .opt').forEach(l=>{const on=l.querySelector('input').checked; l.classList.toggle('ok',on); l.querySelector('.n').textContent=on?'●':'○';});
+    const c=buildPool(SETUP).length; $('#pc').textContent=c; $('#start').disabled=!c; };
+  app.querySelectorAll('input,select').forEach(i=>i.addEventListener('change',upd));
+  $('#gall').onclick=()=>{document.querySelectorAll('#gs input').forEach(i=>i.checked=false); upd();};
+  $('#start').onclick=()=>go('quiz',{...SETUP});
+}
+function buildPool(o){
+  const now=Date.now();
+  let p=T.filter(t=>!o.g||!o.g.length||o.g.includes(gno(t)));
+  if(o.pool==='due') p=p.filter(t=>S.stats[t.id]?.seen && (S.stats[t.id].due||0)<=now);
+  if(o.pool==='new') p=p.filter(t=>!S.stats[t.id]?.seen);
+  if(o.pool==='weak') p=p.filter(t=>S.stats[t.id]?.ng>0);
+  if(o.pool==='mark') p=p.filter(t=>S.marks.includes(t.id));
+  if(o.pool==='ids') p=o.ids.map(id=>byId.get(id)).filter(Boolean);
+  if(o.order==='random') p=shuffle(p);
+  else if(o.order==='weak') p=shuffle(p).sort((a,b)=>((S.stats[a.id]?.box||0)-(S.stats[b.id]?.box||0)) || ((S.stats[a.id]?.last||0)-(S.stats[b.id]?.last||0)));
+  if(o.n) p=p.slice(0,o.n);
+  return p;
+}
+
+// ---------- quiz ----------
+let Q=null;
+function makeQ(t,mode){
+  if(mode==='mix') mode=['dueum','def','topic'][Math.floor(Math.random()*3)];
+  if(mode==='dueum' && !t.lines.some(l=>l.d)) mode='def';
+  const same=T.filter(x=>x.id!==t.id && gno(x)===gno(t)), other=T.filter(x=>x.id!==t.id);
+  const pick=(n,src)=>shuffle(src.length>=n?src:other).slice(0,n);
+  if(mode==='dueum'){
+    const ls=t.lines.filter(l=>l.d); const L=ls[Math.floor(Math.random()*ls.length)];
+    const dis=pick(3, shuffle(same.flatMap(x=>x.lines.filter(l=>l.d&&l.v!==L.v))).slice(0,30)).map(l=>l.v);
+    return {t,mode,q:`<div class="muted small">${h(t.g)} · ${h(t.no)}</div><div class="qtext">${h(t.t)}</div><div class="muted small">${h(L.k)}</div><div class="du">${h(L.d)}</div>`,opts:shuffle([L.v,...dis]),ans:L.v};
+  }
+  if(mode==='def'){
+    const dis=pick(3,same).map(x=>x.t);
+    return {t,mode,q:`<div class="muted small">${h(t.g)} · 이 정의는 어떤 토픽?</div><div class="qdef">"${h(t.def||t.ins[0]||'')}"</div>`,opts:shuffle([t.t,...dis]),ans:t.t};
+  }
+  const dis=pick(3,same.filter(x=>x.def)).map(x=>x.def);
+  return {t,mode,q:`<div class="muted small">${h(t.g)} · ${h(t.no)} · 올바른 정의는?</div><div class="qtext">${h(t.t)}</div>`,opts:shuffle([t.def,...dis]),ans:t.def};
+}
+function quiz(o){
+  if(!Q||Q.done||Q.o!==o){ const pool=buildPool(o); if(!pool.length){ toast('조건에 맞는 토픽이 없어요'); return go('setup'); }
+    Q={o,pool,i:0,ok:0,ng:0,items:[],done:false,start:Date.now(),flipped:false}; }
+  const t=Q.pool[Q.i]; const s=st(t.id); const marked=S.marks.includes(t.id);
+  const head=`<div class="qhead"><div><span class="chip acc">${Q.i+1} / ${Q.pool.length}</span> <span class="chip ok">맞음 ${Q.ok}</span> <span class="chip bad">틀림 ${Q.ng}</span></div><div class="row"><button class="pill" id="mark">${marked?'★ 표시됨':'☆ 표시'}</button><button class="pill" id="spk">🔊 듣기</button><button class="pill" data-go="setup">중단</button></div></div><div class="prog"><i style="width:${pct(Q.i,Q.pool.length)}%"></i></div>`;
+  if(o.mode==='flash'){
+    app.innerHTML=head+`<div class="card flip" id="card" style="margin-top:18px">
+      <div class="muted small">${h(t.g)} · ${h(t.no)} ${boxes(s)}</div><div class="qtext">${h(t.t)}</div>
+      <div id="front" class="muted" style="margin-top:12px">탭해서 정의·두음 확인 → 스스로 채점</div>
+      <div id="back" class="hidden"><p class="qdef">"${h(t.def)}"</p>${kvTable(t)}</div></div>
+    <div class="row" id="grade" style="margin-top:16px;display:none"><button class="btn bad" id="no">몰랐다</button><button class="btn ok" id="yes">알았다</button></div>
+    <p class="kbd">단축키: Space 뒤집기 · 1 몰랐다 · 2 알았다</p>`;
+    const flip=()=>{ $('#front').classList.add('hidden'); $('#back').classList.remove('hidden'); $('#grade').style.display='flex'; Q.flipped=true; };
+    $('#card').onclick=flip;
+    $('#yes').onclick=()=>answerFlash(true); $('#no').onclick=()=>answerFlash(false);
+    document.onkeydown=e=>{ if(e.key===' '){e.preventDefault();flip();} if(Q.flipped&&e.key==='1') answerFlash(false); if(Q.flipped&&e.key==='2') answerFlash(true); };
+  } else {
+    const q=Q.cur = Q.cur && Q.cur.t===t ? Q.cur : makeQ(t,o.mode);
+    app.innerHTML=head+`<div class="card" style="margin-top:18px">${q.q}<div class="opts" id="opts">${q.opts.map((x,i)=>`<button class="opt" data-i="${i}"><span class="n">${i+1}</span><span>${h(x)}</span></button>`).join('')}</div><div id="expl" class="hidden" style="margin-top:16px"></div></div>
+    <div class="row" style="margin-top:16px"><button class="btn hidden" id="next">다음 →</button></div><p class="kbd">단축키: 1~4 선택 · Enter 다음</p>`;
+    $('#opts').onclick=e=>{ const b=e.target.closest('.opt'); if(!b||b.disabled) return; answerMC(q,+b.dataset.i); };
+    document.onkeydown=e=>{ if(/^[1-4]$/.test(e.key)){ const b=document.querySelector(`.opt[data-i="${+e.key-1}"]`); if(b&&!b.disabled) answerMC(q,+e.key-1);} if(e.key==='Enter'&&!$('#next').classList.contains('hidden')) next(); };
+    $('#next').onclick=next;
+  }
+  $('#mark').onclick=()=>{ const i=S.marks.indexOf(t.id); if(i>=0) S.marks.splice(i,1); else S.marks.push(t.id); save(); $('#mark').textContent=S.marks.includes(t.id)?'★ 표시됨':'☆ 표시'; };
+  $('#spk').onclick=e=>{ e.stopPropagation(); speakTopic(t); };
+}
+function kvTable(t){
+  return `<table class="kv">${t.lines.map(l=>`<tr><td class="k">${h(l.k)}</td><td>${h(l.v)}</td><td class="d">${h(l.d)}</td></tr>`).join('')}</table>`;
+}
+function answerFlash(ok){ const t=Q.pool[Q.i]; record(t.id,ok); Q.items.push({id:t.id,ok}); ok?Q.ok++:Q.ng++; next(); }
+function answerMC(q,i){
+  const ok=q.opts[i]===q.ans; record(q.t.id,ok); Q.items.push({id:q.t.id,ok}); ok?Q.ok++:Q.ng++;
+  document.querySelectorAll('.opt').forEach((b,j)=>{ b.disabled=true; if(q.opts[j]===q.ans) b.classList.add('ok'); else if(j===i) b.classList.add('bad'); });
+  const ex=$('#expl'); ex.classList.remove('hidden'); ex.innerHTML=`<div class="label">${ok?'정답':'오답'} · ${h(q.t.t)}</div><p class="small" style="margin:6px 0">"${h(q.t.def)}"</p>${kvTable(q.t)}<p class="small" style="margin:10px 0 0"><button class="pill" data-detail="${q.t.id}">토픽 상세 보기</button></p>`;
+  $('#next').classList.remove('hidden'); $('#next').focus();
+}
+function next(){ Q.i++; Q.cur=null; Q.flipped=false; if(Q.i>=Q.pool.length){ finish(); return; } render(); window.scrollTo(0,0); }
+function finish(){ Q.done=true; document.onkeydown=null; S.history.unshift({at:Date.now(),mode:Q.o.mode,n:Q.pool.length,ok:Q.ok,secs:Math.round((Date.now()-Q.start)/1000),items:Q.items}); S.history=S.history.slice(0,100); save(); go('result'); }
+function result(){
+  const r=S.history[0]; if(!r) return go('home');
+  app.innerHTML=`<div class="label">학습 완료</div><h1>${r.n}개 중 ${r.ok}개 <span class="muted">(${pct(r.ok,r.n)}%)</span></h1>
+  <div class="row" style="margin-top:20px"><button class="btn" data-go="setup">다시 학습</button>${r.n-r.ok? `<button class="btn ghost" data-go="quiz" data-arg='${JSON.stringify({mode:r.mode,pool:'ids',ids:r.items.filter(i=>!i.ok).map(i=>i.id),order:'random',n:0})}'>틀린 ${r.n-r.ok}개 다시</button>`:''}<button class="btn ghost" data-go="home">홈</button></div>
+  <section class="sec"><div class="card list">${r.items.map(i=>{const t=byId.get(i.id); return `<div class="item" data-detail="${t.id}"><span class="no">${h(t.no)}</span><span>${h(t.t)}<br><span class="muted small">${h(t.du.join(' · '))}</span></span><span class="chip ${i.ok?'ok':'bad'}">${i.ok?'맞음':'틀림'}</span></div>`;}).join('')}</div></section>`;
+}
+function wrong(){
+  const ws=T.filter(t=>S.stats[t.id]?.ng>0).sort((a,b)=>(S.stats[a.id].box-S.stats[b.id].box)||(S.stats[b.id].ng-S.stats[a.id].ng));
+  app.innerHTML=`<div class="label">오답노트</div><h1>틀린 적 있는 토픽 ${ws.length}개</h1>
+  <div class="row" style="margin-top:16px">${ws.length?`<button class="btn" data-go="quiz" data-arg='${JSON.stringify({mode:'flash',pool:'weak',order:'weak',n:0})}'>플래시카드로 복습</button><button class="btn ghost" data-go="quiz" data-arg='${JSON.stringify({mode:'mix',pool:'weak',order:'weak',n:0})}'>4지선다로 복습</button>`:'<p class="muted">아직 틀린 토픽이 없어요.</p>'}</div>
+  <section class="sec"><div class="card list">${ws.map(t=>{const s=S.stats[t.id]; return `<div class="item" data-detail="${t.id}"><span class="no">${h(t.no)}</span><span>${h(t.t)}<br><span class="muted small">${h(t.g)} · ${h(t.du.join(' · '))}</span></span><span class="small muted">${boxes(s)}<br>틀림 ${s.ng}</span></div>`;}).join('')}</div></section>`;
+}
+function history(){
+  const H=S.history;
+  app.innerHTML=`<div class="label">기록</div><h1>학습 ${H.length}회</h1><section class="sec"><div class="card list">${H.length?H.map((r,i)=>`<div class="item" style="grid-template-columns:1fr auto;cursor:default"><span>${new Date(r.at).toLocaleString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})} · ${h(MODES[r.mode]?.name||r.mode)}<br><span class="muted small">${r.n}문제 · ${Math.floor(r.secs/60)}분 ${r.secs%60}초</span></span><span class="chip ${pct(r.ok,r.n)>=70?'ok':'bad'}">${r.ok}/${r.n} (${pct(r.ok,r.n)}%)</span></div>`).join(''):'<p class="muted">아직 기록이 없어요.</p>'}</div></section>`;
+}
+function browse(arg){
+  let q=arg?.q||'', g=arg?.g||0;
+  const nums=[...new Set(T.map(gno))];
+  const draw=()=>{
+    const ql=q.trim().toLowerCase();
+    const rows=T.filter(t=>(!g||gno(t)===g)&&(!ql||(t.t+' '+t.du.join(' ')+' '+t.def).toLowerCase().includes(ql)));
+    $('#cnt').textContent=rows.length;
+    $('#rows').innerHTML=rows.map(t=>{const s=S.stats[t.id]||{box:0}; return `<div class="item" data-detail="${t.id}"><span class="no">${h(t.no)}</span><span>${h(t.t)}<br><span class="muted small">${h(t.du.slice(0,3).join(' · '))}</span></span><span>${boxes(s)}${S.marks.includes(t.id)?' ★':''}</span></div>`;}).join('');
+  };
+  app.innerHTML=`<div class="label">토픽 목록</div><h1>전체 <span id="cnt"></span>개</h1><div class="row" style="margin-top:16px"><input type="text" id="q" placeholder="토픽·두음·정의 검색" value="${h(q)}" style="flex:1;min-width:200px"><select id="g"><option value="0">전체 분류</option>${nums.map(n=>`<option value="${n}" ${n===g?'selected':''}>${n}. ${h(gname(n))}</option>`).join('')}</select></div><section class="sec"><div class="card list" id="rows"></div></section>`;
+  $('#q').oninput=e=>{q=e.target.value; VARG={q,g}; draw();}; $('#g').onchange=e=>{g=+e.target.value; VARG={q,g}; draw();}; draw();
+}
+function detail(a){
+  const t=byId.get(a.id); const s=st(t.id); const marked=S.marks.includes(t.id);
+  const idx=T.indexOf(t), prev=T[idx-1], nx=T[idx+1];
+  app.innerHTML=`<div class="row" style="justify-content:space-between"><button class="pill" id="back">← 돌아가기</button><div class="row"><button class="pill" id="mark">${marked?'★ 표시됨':'☆ 표시'}</button><button class="pill" id="spk">🔊 듣기</button></div></div>
+  <div class="label" style="margin-top:16px">${h(t.g)} · ${h(t.no)}</div><h1>${h(t.t)}</h1>
+  <p class="muted small">${boxes(s)} 학습 ${s.seen}회 · 맞음 ${s.ok} · 틀림 ${s.ng}</p>
+  <section class="sec"><div class="card"><div class="label">Ⅰ. 정의</div><p class="qdef" style="margin:6px 0 0">"${h(t.def)}"</p></div>
+  <div class="card"><div class="label">Ⅱ. 구성요소 · 두음</div>${kvTable(t)}<p style="margin:14px 0 0"><span class="muted small">암기 순서</span><br><span class="du" style="font-size:20px">${h(t.du.join(' → '))}</span></p></div>
+  <div class="card"><div class="label">Ⅲ. 인사이트</div><ul class="ins">${t.ins.map(x=>`<li>${h(x)}</li>`).join('')}</ul></div>
+  <div class="row"><button class="btn sm" data-go="quiz" data-arg='${JSON.stringify({mode:'mix',pool:'ids',ids:[t.id],order:'seq',n:0})}'>이 토픽 퀴즈</button>${prev?`<button class="btn ghost sm" data-detail="${prev.id}">← ${h(prev.no)}</button>`:''}${nx?`<button class="btn ghost sm" data-detail="${nx.id}">${h(nx.no)} →</button>`:''}</div></section>`;
+  $('#back').onclick=()=>go(a.back&&a.back!=='detail'?a.back:'browse',a.barg);
+  $('#mark').onclick=()=>{ const i=S.marks.indexOf(t.id); if(i>=0) S.marks.splice(i,1); else S.marks.push(t.id); save(); $('#mark').textContent=S.marks.includes(t.id)?'★ 표시됨':'☆ 표시'; };
+  $('#spk').onclick=()=>speakTopic(t);
+}
+function settings(){
+  app.innerHTML=`<div class="label">설정</div><h1>시험일 · 데이터</h1><section class="sec">
+  <div class="card"><h3>시험일</h3><div class="row" style="margin-top:10px"><input type="date" id="exam" value="${h(S.exam)}"><button class="btn sm" id="saveExam">저장</button></div></div>
+  <div class="card"><h3>테마</h3><div class="row" style="margin-top:10px"><select id="theme"><option value="">시스템 설정</option><option value="light">밝게</option><option value="dark">어둡게</option></select></div></div>
+  <div class="card"><h3>학습 데이터</h3><p class="muted small">진도는 이 브라우저에만 저장돼요. 다른 기기로 옮기려면 내보내기 → 가져오기.</p><div class="row"><button class="btn ghost sm" id="exp">내보내기</button><label class="btn ghost sm" style="cursor:pointer">가져오기<input type="file" id="imp" accept="application/json" hidden></label><button class="btn ghost sm" id="reset" style="color:var(--bad)">초기화</button></div></div>
+  <div class="card"><h3>토픽 데이터</h3><p class="muted small">토픽 ${T.length}개 · 분류 ${G.length}개. 원본은 Google 시트 '토픽정리3_노션'이고, 노션 토픽정리와 같은 내용이에요.</p></div></section>`;
+  $('#theme').value=S.theme||''; $('#theme').onchange=e=>{S.theme=e.target.value; save(); applyTheme();};
+  $('#saveExam').onclick=()=>{S.exam=$('#exam').value; save(); toast('저장했어요');};
+  $('#exp').onclick=()=>{ const b=new Blob([JSON.stringify(S)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='itpe-progress.json'; a.click(); };
+  $('#imp').onchange=e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(x=>{ try{ const j=JSON.parse(x); if(!j.stats) throw 0; S=j; save(); toast('가져왔어요'); render(); }catch(err){ toast('파일 형식이 맞지 않아요'); } }); };
+  $('#reset').onclick=()=>{ if(confirm('모든 학습 기록을 지울까요?')){ S={stats:{},history:[],marks:[],exam:S.exam,theme:S.theme}; save(); toast('초기화했어요'); render(); } };
+}
+function applyTheme(){ if(S.theme) document.documentElement.dataset.theme=S.theme; else delete document.documentElement.dataset.theme; }
+applyTheme(); render();
+</script></body></html>
